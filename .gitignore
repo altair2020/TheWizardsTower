@@ -1,2 +1,8 @@
 # Video files
 videos/
+
+# Large unused assets
+images/ApplyUVGradientPath_1.gif
+images/BCO.*.png
+OSM/
+DesignDoc/
