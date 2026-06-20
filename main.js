@@ -32,15 +32,22 @@ const galleryItems = document.querySelectorAll('.gallery-item');
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightbox-img');
 const lightboxClose = document.querySelector('.lightbox-close');
+const lightboxPrev = document.querySelector('.lightbox-prev');
+const lightboxNext = document.querySelector('.lightbox-next');
 let focusedElement = null;
+let currentIndex = 0;
 
-galleryItems.forEach(item => {
+function showImage(index) {
+  currentIndex = (index + galleryItems.length) % galleryItems.length;
+  const img = galleryItems[currentIndex].querySelector('img');
+  lightboxImg.src = img.src;
+  lightboxImg.alt = img.alt;
+}
+
+galleryItems.forEach((item, index) => {
   item.addEventListener('click', () => {
     focusedElement = item;
-    const imgSrc = item.querySelector('img').src;
-    const imgAlt = item.querySelector('img').alt;
-    lightboxImg.src = imgSrc;
-    lightboxImg.alt = imgAlt;
+    showImage(index);
     lightbox.classList.add('open');
     lightboxClose.focus();
   });
@@ -52,6 +59,8 @@ function closeLightbox() {
 }
 
 lightboxClose?.addEventListener('click', closeLightbox);
+lightboxPrev?.addEventListener('click', () => showImage(currentIndex - 1));
+lightboxNext?.addEventListener('click', () => showImage(currentIndex + 1));
 
 lightbox?.addEventListener('click', (e) => {
   if (e.target === lightbox) {
@@ -60,9 +69,10 @@ lightbox?.addEventListener('click', (e) => {
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && lightbox.classList.contains('open')) {
-    closeLightbox();
-  }
+  if (!lightbox.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+  if (e.key === 'ArrowRight') showImage(currentIndex + 1);
 });
 
 // ============================================
